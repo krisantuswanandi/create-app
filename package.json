@@ -1,11 +1,19 @@
 {
   "name": "create-santus",
-  "version": "0.0.1-alpha.2",
+  "version": "0.0.1-alpha.3",
   "description": "create santus app",
   "type": "module",
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/krisantuswanandi/create-santus.git"
+  },
+  "bugs": {
+    "url": "https://github.com/krisantuswanandi/create-santus/issues"
+  },
+  "homepage": "https://github.com/krisantuswanandi/create-santus#readme",
   "bin": {
     "create-santus": "bin/index.js"
   },
