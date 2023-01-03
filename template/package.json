@@ -1,0 +1,16 @@
+{
+  "name": "[PROJECTNAME]",
+  "version": "0.0.1",
+  "description": "",
+  "type": "module",
+  "main": "dist/index.ts",
+  "scripts": {
+    "build": "unbuild"
+  },
+  "keywords": [],
+  "author": "Krisantus Wanandi <krisantus.wanandi@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "unbuild": "^1.0.2"
+  }
+}
