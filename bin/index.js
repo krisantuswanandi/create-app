@@ -1,3 +1,5 @@
 #!/usr/bin/env node
 
-import "../dist/index.mjs";
+import { run } from "../dist/index.mjs";
+
+run(process.argv);

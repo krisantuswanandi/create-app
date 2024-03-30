@@ -5,9 +5,9 @@ import path from "path";
 import url from "url";
 import fs from "node:fs";
 import child from "node:child_process";
+import { version } from "../package.json";
 
 const program = new Command();
-program.parse();
 
 const getProjectName = async () => {
   const projectName = program.args[0];
@@ -68,7 +68,9 @@ function copyDir(
   }
 }
 
-getProjectName().then((projectName) => {
+export async function createProject() {
+  const projectName = await getProjectName();
+
   if (projectName) {
     const templatePath = path.join(
       url.fileURLToPath(import.meta.url),
@@ -89,4 +91,21 @@ getProjectName().then((projectName) => {
     child.spawnSync("git", ["init", projectPath]);
     spinner.succeed(`${projectName} created!`);
   }
-});
+}
+
+export async function run(args: string[]) {
+  const program = new Command();
+  program
+    .name("create-app")
+    .argument("[name]", "Project name")
+    .option("-t, --template <name>", "Choose template")
+    .option("-v, --version", "Show version")
+    .parse(args);
+
+  const options = program.opts();
+
+  if (options.version) {
+    console.log(version);
+    return;
+  }
+}
