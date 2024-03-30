@@ -1,19 +1,23 @@
-# create-santus
+# Create Santus App
 
-Sample CLI project to generate new projects from boilerplate, based on [create-vite](https://github.com/vitejs/vite/tree/main/packages/create-vite)
+Generate a new project based on boilerplates from [github.com/krisantuswanandi](http://github.com/krisantuswanandi).
 
 ## Usage
 
 To create a new project, run:
 
 ```sh
-npm create santus@latest
+npm create @santus/app@latest
+yarn create @santus/app
+pnpm create @santus/app@latest
 ```
 
-You can also directly specify the project name using, run:
+You can also directly specify the project name using:
 
 ```sh
-npm create santus@latest project-name
+npm create @santus/app@latest project-name
+yarn create @santus/app project-name
+pnpm create @santus/app@latest project-name
 ```
 
 ## Development
@@ -21,17 +25,18 @@ npm create santus@latest project-name
 To build the project for local environment, run:
 
 ```sh
-npm run dev
+pnpm install
+pnpm run dev
 ```
 
 Install the local package manually, run:
 
 ```sh
-npm link
+npm link # haven't been able to use pnpm to install global bin
 ```
 
 Check if the package is installed, run:
 
 ```sh
-create-santus -h
+create-app -h
 ```
