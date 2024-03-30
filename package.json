@@ -25,7 +25,8 @@
   "scripts": {
     "dev": "unbuild --stub",
     "build": "unbuild",
-    "test": "vitest"
+    "test": "vitest",
+    "release": "bumpp && pnpm run build && npm publish --access public"
   },
   "keywords": [],
   "author": "Krisantus Wanandi <krisantus.wanandi@gmail.com>",
@@ -33,6 +34,7 @@
   "devDependencies": {
     "@types/node": "^20.11.30",
     "@types/prompts": "^2.4.9",
+    "bumpp": "^9.4.0",
     "typescript": "^5.4.3",
     "unbuild": "^2.0.0",
     "vitest": "^1.4.0"
