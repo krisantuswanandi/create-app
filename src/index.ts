@@ -106,6 +106,6 @@ export async function run(args: string[]) {
 
   if (options.version) {
     console.log(version);
-    return;
+    process.exit(0);
   }
 }
