@@ -22,6 +22,25 @@ async function inputProjectName() {
   return response.value as string;
 }
 
+async function inputTemplate() {
+  const response = await prompts({
+    type: "select",
+    name: "value",
+    message: "Template?",
+    choices: [
+      { title: "Default", value: "default" },
+      { title: "User Script", value: "user-script" },
+    ],
+  });
+
+  if (!response.value) {
+    console.log("Operation cancelled");
+    process.exit(0);
+  }
+
+  return response.value as string;
+}
+
 export async function run(args: string[]) {
   const program = new Command();
   program
@@ -43,5 +62,10 @@ export async function run(args: string[]) {
     projectName = await inputProjectName();
   }
 
-  console.log(`Creating ${projectName}...`);
+  let template = options.template;
+  if (!template) {
+    template = await inputTemplate();
+  }
+
+  console.log(`Creating ${projectName} with ${template} template...`);
 }
