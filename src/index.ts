@@ -58,13 +58,22 @@ export async function run(args: string[]) {
   }
 
   let projectName = program.args[0];
+  let template = options.template;
+
   if (!projectName) {
     projectName = await inputProjectName();
+  } else if (!projectName.match(/^[a-z0-9-]+$/)) {
+    console.error("Invalid project name");
+    process.exit(1);
+  } else if (!template) {
+    template = "default";
   }
 
-  let template = options.template;
   if (!template) {
     template = await inputTemplate();
+  } else if (!["default", "user-script"].includes(template)) {
+    console.error("Unsupported template");
+    process.exit(1);
   }
 
   console.log(`Creating ${projectName} with ${template} template...`);
