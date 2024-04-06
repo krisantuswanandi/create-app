@@ -1,42 +1,37 @@
-import { describe, it, expect, vi, afterEach } from "vitest";
-import { run } from "../src/index";
+import { describe, it, expect } from "vitest";
+import { execSync } from "child_process";
 import { version } from "../package.json";
+import { join } from "path";
 
-async function runApp(argument: string) {
-  const args = argument.split(" ");
-  return run(["node", "app", ...args]);
+function runApp(argument: string) {
+  const app = join(__dirname, "..", "bin", "index.js");
+  return execSync(`node ${app} ${argument}`, { stdio: "pipe" })
+    .toString()
+    .trim();
 }
 
 describe("create app cli", () => {
-  const logMock = vi.spyOn(console, "log").mockImplementation(() => undefined);
-  const errorMock = vi
-    .spyOn(console, "error")
-    .mockImplementation(() => undefined);
-  const exitMock = vi
-    .spyOn(process, "exit")
-    .mockImplementation(() => undefined as never);
-
-  afterEach(() => {
-    logMock.mockReset();
-    errorMock.mockReset();
-    exitMock.mockReset();
-  });
-
   describe("version flag", () => {
     const testCases = [
       "--version",
       "-v",
       "-v project",
-      "-v -t template",
-      "-v -t template project",
+      "-v -t default",
+      "-v -t default project",
     ];
 
-    it.each(testCases)("%s", async (cmd) => {
-      await runApp(cmd);
-      expect(logMock).toHaveBeenCalledOnce();
-      expect(logMock).toHaveBeenLastCalledWith(version);
-      expect(exitMock).toHaveBeenCalledOnce();
-      expect(exitMock).toHaveBeenLastCalledWith(0);
+    it.each(testCases)("%s", (cmd) => {
+      const stdout = runApp(cmd);
+      expect(stdout).toBe(version);
+    });
+  });
+
+  describe("default template", () => {
+    const testCases = ["project-name", "project-name -t default"];
+
+    it.each(testCases)("%s", (cmd) => {
+      const stdout = runApp(cmd);
+      expect(stdout).toBe("Creating project-name with default template...");
     });
   });
 });
