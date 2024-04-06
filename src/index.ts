@@ -77,7 +77,11 @@ export async function run(args: string[]) {
     process.exit(1);
   }
 
-  const spinner = ora("Creating a new project...").start();
+  const spinner = ora({
+    text: "Creating project...",
+    stream: process.stdout,
+  }).start();
+
   const { create } = await import(`./templates/${template}`);
   await create(projectName);
   spinner.succeed("Project created!");

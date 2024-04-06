@@ -1,7 +1,11 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, afterEach, beforeAll } from "vitest";
 import { execSync } from "child_process";
 import { version } from "../package.json";
 import { join } from "path";
+import { rmSync, readdirSync } from "fs";
+
+const projectName = "tmp";
+const generatedProject = join(__dirname, "..", projectName);
 
 function runApp(argument: string) {
   const app = join(__dirname, "..", "bin", "index.js");
@@ -14,18 +18,28 @@ function runApp(argument: string) {
   return output?.toString().trim() || "";
 }
 
+function cleanup() {
+  rmSync(generatedProject, {
+    recursive: true,
+    force: true,
+  });
+}
+
 describe("create app cli", () => {
+  beforeAll(cleanup);
+  afterEach(cleanup);
+
   describe("print version", () => {
     const testCases = [
       "-v",
-      "-v project-name",
+      `-v ${projectName}`,
       "-v -t default",
-      "-v -t default project-name",
+      `-v -t default ${projectName}`,
       "-v --template default",
-      "-v --template default project-name",
+      `-v --template default ${projectName}`,
       "--version",
       "--version --template default",
-      "--version --template default project-name",
+      `--version --template default ${projectName}`,
     ];
 
     it.each(testCases)("%s", (cmd) => {
@@ -36,14 +50,16 @@ describe("create app cli", () => {
 
   describe("default template", () => {
     const testCases = [
-      "project-name",
-      "project-name -t default",
-      "project-name --template default",
+      `${projectName}`,
+      `${projectName} -t default`,
+      `${projectName} --template default`,
     ];
 
     it.each(testCases)("%s", (cmd) => {
       const output = runApp(cmd);
-      expect(output).toBe("Creating project-name with default template...");
+      const files = readdirSync(generatedProject);
+      expect(output).toContain("Project created!");
+      expect(files.length).toBeTruthy();
     });
   });
 
@@ -73,8 +89,8 @@ describe("create app cli", () => {
 
   describe("template validation", () => {
     const testCases = [
-      "project-name -t unknown",
-      "project-name --template unknown",
+      `${projectName} -t unknown`,
+      `${projectName} --template unknown`,
     ];
 
     it.each(testCases)("%s", (cmd) => {
