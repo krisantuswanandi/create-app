@@ -1,4 +1,3 @@
-import { exec } from "child_process";
 import {
   mkdirSync,
   readFileSync,
@@ -7,7 +6,6 @@ import {
   statSync,
   writeFileSync,
 } from "fs";
-import ora from "ora";
 import { join, resolve } from "path";
 import { fileURLToPath } from "url";
 
@@ -53,16 +51,7 @@ export async function create(projectName: string) {
     "../default-template"
   );
   const projectPath = join(process.cwd(), projectName);
-
-  const spinner = ora().start();
   rmSync(projectPath, { recursive: true, force: true });
-
-  spinner.text = "Creating project folder...";
   mkdirSync(projectPath);
-
-  spinner.text = "Copying files from template...";
   copyDir(templatePath, projectPath, { projectName });
-
-  exec(`git init ${projectPath}`);
-  spinner.succeed(`${projectName} created!`);
 }

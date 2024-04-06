@@ -1,5 +1,6 @@
 import { Command } from "commander";
 import prompts from "prompts";
+import ora from "ora";
 import { version } from "../package.json";
 
 async function inputProjectName() {
@@ -76,6 +77,8 @@ export async function run(args: string[]) {
     process.exit(1);
   }
 
+  const spinner = ora("Creating a new project...").start();
   const { create } = await import(`./templates/${template}`);
   await create(projectName);
+  spinner.succeed("Project created!");
 }
