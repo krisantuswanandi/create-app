@@ -5,33 +5,81 @@ import { join } from "path";
 
 function runApp(argument: string) {
   const app = join(__dirname, "..", "bin", "index.js");
-  return execSync(`node ${app} ${argument}`, { stdio: "pipe" })
-    .toString()
-    .trim();
+  let output: Buffer | null = null;
+  try {
+    output = execSync(`node ${app} ${argument}`);
+  } catch (error) {
+    output = error.stderr;
+  }
+  return output?.toString().trim() || "";
 }
 
 describe("create app cli", () => {
-  describe("version flag", () => {
+  describe("print version", () => {
     const testCases = [
-      "--version",
       "-v",
-      "-v project",
+      "-v project-name",
       "-v -t default",
-      "-v -t default project",
+      "-v -t default project-name",
+      "-v --template default",
+      "-v --template default project-name",
+      "--version",
+      "--version --template default",
+      "--version --template default project-name",
     ];
 
     it.each(testCases)("%s", (cmd) => {
-      const stdout = runApp(cmd);
-      expect(stdout).toBe(version);
+      const output = runApp(cmd);
+      expect(output).toBe(version);
     });
   });
 
   describe("default template", () => {
-    const testCases = ["project-name", "project-name -t default"];
+    const testCases = [
+      "project-name",
+      "project-name -t default",
+      "project-name --template default",
+    ];
 
     it.each(testCases)("%s", (cmd) => {
-      const stdout = runApp(cmd);
-      expect(stdout).toBe("Creating project-name with default template...");
+      const output = runApp(cmd);
+      expect(output).toBe("Creating project-name with default template...");
+    });
+  });
+
+  describe("project name prompt", () => {
+    const testCases = ["", "-t default", "--template default"];
+
+    it.each(testCases)("%s", (cmd) => {
+      const output = runApp(cmd);
+      expect(output).toContain("Project name?");
+    });
+  });
+
+  describe("project name validation", () => {
+    const testCases = [
+      "ProjectName",
+      "project_name",
+      "'project name'",
+      "ProjectName -t default",
+      "project_name --template default",
+    ];
+
+    it.each(testCases)("%s", (cmd) => {
+      const output = runApp(cmd);
+      expect(output).toBe("Invalid project name");
+    });
+  });
+
+  describe("template validation", () => {
+    const testCases = [
+      "project-name -t unknown",
+      "project-name --template unknown",
+    ];
+
+    it.each(testCases)("%s", (cmd) => {
+      const output = runApp(cmd);
+      expect(output).toBe("Unsupported template");
     });
   });
 });
