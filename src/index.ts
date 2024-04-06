@@ -76,5 +76,6 @@ export async function run(args: string[]) {
     process.exit(1);
   }
 
-  console.log(`Creating ${projectName} with ${template} template...`);
+  const { create } = await import(`./templates/${template}`);
+  await create(projectName);
 }
