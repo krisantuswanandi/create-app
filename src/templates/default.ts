@@ -46,10 +46,7 @@ function copyDir(
 }
 
 export async function create(projectName: string) {
-  const templatePath = join(
-    fileURLToPath(import.meta.url),
-    "../default-template"
-  );
+  const templatePath = join(fileURLToPath(import.meta.url), "../../template");
   const projectPath = join(process.cwd(), projectName);
   rmSync(projectPath, { recursive: true, force: true });
   mkdirSync(projectPath);

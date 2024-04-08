@@ -2,6 +2,8 @@ import { Command } from "commander";
 import prompts from "prompts";
 import ora from "ora";
 import { version } from "../package.json";
+import * as defaultTmpl from "./templates/default";
+import * as userScriptTmpl from "./templates/user-script";
 
 async function inputProjectName() {
   const response = await prompts({
@@ -82,7 +84,12 @@ export async function run(args: string[]) {
     stream: process.stdout,
   }).start();
 
-  const { create } = await import(`./templates/${template}`);
+  let create = defaultTmpl.create;
+  switch (template) {
+    case "user-script":
+      create = userScriptTmpl.create;
+      break;
+  }
   await create(projectName);
   spinner.succeed("Project created!");
 }
