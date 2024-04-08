@@ -1,0 +1,14 @@
+name: Release
+description: Create a release
+
+inputs:
+  tag:
+    description: Tag
+    required: true
+  token:
+    description: Token
+    required: true
+
+runs:
+  using: node20
+  main: index.js

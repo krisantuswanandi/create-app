@@ -1,0 +1,21 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "20"
+      - run: npm install @actions/core @actions/github
+      - uses: ./.github/actions/release
+        id: release
+        with:
+          tag: ${{ github.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
