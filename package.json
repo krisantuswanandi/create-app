@@ -1,6 +1,6 @@
 {
   "name": "@santus/create-app",
-  "version": "0.0.1-alpha.5",
+  "version": "0.0.1-alpha.6",
   "description": "Create a new project based on templates from github.com/krisantuswanandi",
   "type": "module",
   "main": "dist/index.cjs",
